@@ -75,7 +75,7 @@ FrontEnd
 A possible project structure is:
 
 ```text
-abm-usuarios/
+Proyecto-ABM/
 │
 ├── database/
 │   └── abm_usuarios.sql
