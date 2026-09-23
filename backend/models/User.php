@@ -1,63 +1,43 @@
 <?php
 
-require_once __DIR__ . '/../config/database.php';
-
 class User
 {
-    public static function all(PDO $pdo): array
-    {
-        $sql = "
-            SELECT u.id, u.first_name, u.last_name, u.username, u.email, r.name AS role_name
-            FROM users u
-            INNER JOIN roles r ON r.id = u.role_id
-            ORDER BY u.id ASC
-        ";
+    public ?int $id;
+    public string $firstName;
+    public string $lastName;
+    public string $username;
+    public string $email;
+    public int $roleId;
+    public ?string $roleName;
 
-        $stmt = $pdo->query($sql);
-        return $stmt->fetchAll();
+    public function __construct(
+        ?int $id,
+        string $firstName,
+        string $lastName,
+        string $username,
+        string $email,
+        int $roleId,
+        ?string $roleName = null
+    ) {
+        $this->id = $id;
+        $this->firstName = $firstName;
+        $this->lastName = $lastName;
+        $this->username = $username;
+        $this->email = $email;
+        $this->roleId = $roleId;
+        $this->roleName = $roleName;
     }
 
-    public static function findById(PDO $pdo, int $id): ?array
+    public static function fromArray(array $data): self
     {
-        $stmt = $pdo->prepare('SELECT * FROM users WHERE id = :id LIMIT 1');
-        $stmt->execute([':id' => $id]);
-        $user = $stmt->fetch();
-
-        return $user ?: null;
-    }
-
-    public static function create(PDO $pdo, array $data): bool
-    {
-        $sql = 'INSERT INTO users (first_name, last_name, username, email, role_id) VALUES (:first_name, :last_name, :username, :email, :role_id)';
-
-        $stmt = $pdo->prepare($sql);
-        return $stmt->execute([
-            ':first_name' => trim($data['first_name']),
-            ':last_name' => trim($data['last_name']),
-            ':username' => trim($data['username']),
-            ':email' => trim($data['email']),
-            ':role_id' => (int) $data['role_id'],
-        ]);
-    }
-
-    public static function update(PDO $pdo, int $id, array $data): bool
-    {
-        $sql = 'UPDATE users SET first_name = :first_name, last_name = :last_name, username = :username, email = :email, role_id = :role_id WHERE id = :id';
-
-        $stmt = $pdo->prepare($sql);
-        return $stmt->execute([
-            ':first_name' => trim($data['first_name']),
-            ':last_name' => trim($data['last_name']),
-            ':username' => trim($data['username']),
-            ':email' => trim($data['email']),
-            ':role_id' => (int) $data['role_id'],
-            ':id' => $id,
-        ]);
-    }
-
-    public static function delete(PDO $pdo, int $id): bool
-    {
-        $stmt = $pdo->prepare('DELETE FROM users WHERE id = :id');
-        return $stmt->execute([':id' => $id]);
+        return new self(
+            isset($data['id']) ? (int) $data['id'] : null,
+            (string) $data['first_name'],
+            (string) $data['last_name'],
+            (string) $data['username'],
+            (string) $data['email'],
+            (int) $data['role_id'],
+            isset($data['role_name']) ? (string) $data['role_name'] : null
+        );
     }
 }

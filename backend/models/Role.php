@@ -1,12 +1,24 @@
 <?php
 
-require_once __DIR__ . '/../config/database.php';
-
 class Role
 {
-    public static function all(PDO $pdo): array
+    public int $id;
+    public string $name;
+    public ?string $description;
+
+    public function __construct(int $id, string $name, ?string $description = null)
     {
-        $stmt = $pdo->query('SELECT id, name, description FROM roles ORDER BY name');
-        return $stmt->fetchAll();
+        $this->id = $id;
+        $this->name = $name;
+        $this->description = $description;
+    }
+
+    public static function fromArray(array $data): self
+    {
+        return new self(
+            (int) $data['id'],
+            (string) $data['name'],
+            isset($data['description']) ? (string) $data['description'] : null
+        );
     }
 }
