@@ -8,8 +8,15 @@
 </head>
 <body>
     <div class="container small">
+        <div class="system-bar">
+            <span class="system-mark"><span class="status-dot"></span> ABM // USER MANAGEMENT</span>
+            <span><?= $mode === 'edit' ? 'MODE / EDIT' : 'MODE / CREATE' ?></span>
+        </div>
         <header class="header">
-            <h1><?= $mode === 'edit' ? 'Editar Usuario' : 'Crear Usuario' ?></h1>
+            <div>
+                <p class="eyebrow">User registry / <?= $mode === 'edit' ? 'update' : 'new entry' ?></p>
+                <h1><?= $mode === 'edit' ? 'Editar usuario' : 'Crear usuario' ?></h1>
+            </div>
             <a class="btn btn-secondary" href="index.php">Volver</a>
         </header>
 
@@ -24,6 +31,10 @@
         <?php endif; ?>
 
         <form method="POST" class="card form-card" action="index.php?action=<?= $mode === 'edit' ? 'update&id=' . $id : 'create' ?>">
+            <div class="form-intro">
+                <h2><?= $mode === 'edit' ? 'Actualizar registro' : 'Nuevo registro de sistema' ?></h2>
+                <p>Completa los datos requeridos para continuar.</p>
+            </div>
             <?php if ($mode === 'edit'): ?><input type="hidden" name="id" value="<?= $id ?>"><?php endif; ?>
             <div class="field-group"><label for="first_name">Nombre</label><input type="text" id="first_name" name="first_name" value="<?= htmlspecialchars($formData['first_name'], ENT_QUOTES, 'UTF-8') ?>" required></div>
             <div class="field-group"><label for="last_name">Apellido</label><input type="text" id="last_name" name="last_name" value="<?= htmlspecialchars($formData['last_name'], ENT_QUOTES, 'UTF-8') ?>" required></div>
@@ -38,7 +49,10 @@
                     <?php endforeach; ?>
                 </select>
             </div>
-            <button type="submit" class="btn btn-primary"><?= $mode === 'edit' ? 'Actualizar' : 'Guardar' ?></button>
+            <div class="form-actions">
+                <a class="btn btn-secondary" href="index.php">Cancelar</a>
+                <button type="submit" class="btn btn-primary"><?= $mode === 'edit' ? 'Guardar cambios' : 'Crear usuario' ?></button>
+            </div>
         </form>
     </div>
 </body>
