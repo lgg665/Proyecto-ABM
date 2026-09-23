@@ -29,7 +29,8 @@ if ($method === 'POST') {
     ];
     $userId = isset($_POST['id']) ? (int) $_POST['id'] : 0;
 
-    $result = $action === 'update'
+    $isUpdate = $action === 'update' || $action === 'edit';
+    $result = $isUpdate
         ? $controller->update($userId, $formData)
         : $controller->store($formData);
 
@@ -39,7 +40,7 @@ if ($method === 'POST') {
     }
 
     $errors = $result['errors'];
-    $action = $action === 'update' ? 'edit' : 'create';
+    $action = $isUpdate ? 'edit' : 'create';
 }
 
 if ($action === 'delete') {
@@ -141,7 +142,7 @@ if ($action === 'create') {
             </table>
         </section>
         <?php else: ?>
-        <form method="POST" class="card form-card" action="index.php?action=<?= $action ?><?= $action === 'edit' ? '&id=' . $userId : '' ?>">
+        <form method="POST" class="card form-card" action="index.php?action=<?= $action === 'edit' ? 'update' : 'create' ?><?= $action === 'edit' ? '&id=' . $userId : '' ?>">
             <?php if ($action === 'edit'): ?>
                 <input type="hidden" name="id" value="<?= $userId ?>">
             <?php endif; ?>

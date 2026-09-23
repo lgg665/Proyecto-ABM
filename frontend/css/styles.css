@@ -37,10 +37,12 @@ h1 {
     border-radius: 12px;
     box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
     padding: 20px;
+    overflow-x: auto;
 }
 
 table {
     width: 100%;
+    min-width: 760px;
     border-collapse: collapse;
 }
 
@@ -145,6 +147,10 @@ input, select {
 
     table, thead, tbody, th, td, tr {
         display: block;
+    }
+
+    .card {
+        overflow-x: visible;
     }
 
     thead {
