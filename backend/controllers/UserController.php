@@ -5,6 +5,52 @@ require_once __DIR__ . '/../models/Role.php';
 
 class UserController
 {
+    public function getIndexData(): array
+    {
+        $pdo = getDatabaseConnection();
+
+        return ['users' => User::all($pdo)];
+    }
+
+    public function getCreateData(): array
+    {
+        $pdo = getDatabaseConnection();
+
+        return [
+            'roles' => Role::all($pdo),
+            'formData' => [
+                'first_name' => '',
+                'last_name' => '',
+                'username' => '',
+                'email' => '',
+                'role_id' => '',
+            ],
+            'errors' => [],
+        ];
+    }
+
+    public function getEditData(int $id): ?array
+    {
+        $pdo = getDatabaseConnection();
+        $user = User::findById($pdo, $id);
+
+        if (!$user) {
+            return null;
+        }
+
+        return [
+            'roles' => Role::all($pdo),
+            'formData' => [
+                'first_name' => $user['first_name'],
+                'last_name' => $user['last_name'],
+                'username' => $user['username'],
+                'email' => $user['email'],
+                'role_id' => $user['role_id'],
+            ],
+            'errors' => [],
+        ];
+    }
+
     public function validate(array $data, ?int $userId = null): array
     {
         $errors = [];
