@@ -1,192 +1,69 @@
-# Proyecto-ABM
+# CodeIgniter 4 Application Starter
 
-Sistema de gestión de usuarios (ABM) desarrollado en PHP con MySQL, siguiendo una estructura modular en capas con un enfoque MVC orientado a la lógica de negocio y acceso a datos.
+## What is CodeIgniter?
 
-## Descripción general
+CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
+More information can be found at the [official site](https://codeigniter.com).
 
-Este proyecto permite:
+This repository holds a composer-installable app starter.
+It has been built from the
+[development repository](https://github.com/codeigniter4/CodeIgniter4).
 
-- Listar usuarios
-- Crear nuevos usuarios
-- Editar usuarios existentes
-- Eliminar usuarios
-- Asignar roles desde una base de datos
-- Validar unicidad de usuario y email
-- Mostrar una interfaz web simple y responsiva
+More information about the plans for version 4 can be found in [CodeIgniter 4](https://forum.codeigniter.com/forumdisplay.php?fid=28) on the forums.
 
-La aplicación está pensada como un ejemplo práctico de separación de responsabilidades, donde la vista se renderiza desde PHP y el flujo principal pasa por un controlador frontal ubicado en la carpeta frontend.
+You can read the [user guide](https://codeigniter.com/user_guide/)
+corresponding to the latest version of the framework.
 
-## Arquitectura actual
+## Installation & updates
 
-La estructura actual se organiza en capas:
+`composer create-project codeigniter4/appstarter` then `composer update` whenever
+there is a new release of the framework.
 
-- Model: entidades del dominio
-- Repository: acceso a la base de datos
-- Service: validaciones y lógica de negocio
-- Controller: coordinación entre requests HTTP y servicio
-- View: templates HTML/PHP que renderizan la interfaz
+When updating, check the release notes to see if there are any changes you might need to apply
+to your `app` folder. The affected files can be copied or merged from
+`vendor/codeigniter4/framework/app`.
 
-Flujo típico:
+## Setup
 
-1. El usuario navega desde frontend/index.php
-2. El controlador recibe la acción solicitada
-3. El servicio valida los datos y ejecuta la lógica
-4. El repositorio persiste o consulta la base de datos
-5. La vista se carga con los resultados
+Copy `env` to `.env` and tailor for your app, specifically the baseURL
+and any database settings.
 
-## Estructura del proyecto
+## Important Change with index.php
 
-```text
-Proyecto-ABM/
-├── backend/
-│   ├── config/
-│   │   └── database.php
-│   ├── controllers/
-│   │   └── UserController.php
-│   ├── models/
-│   │   ├── Role.php
-│   │   └── User.php
-│   ├── repositories/
-│   │   ├── RoleRepository.php
-│   │   └── UserRepository.php
-│   └── services/
-│       └── UserService.php
-├── database/
-│   └── abm_usuarios.sql
-├── frontend/
-│   ├── css/
-│   │   └── styles.css
-│   ├── views/
-│   │   └── users/
-│   │       ├── form.php
-│   │       └── index.php
-│   ├── index.php
-│   └── .htaccess (si se agrega más adelante)
-├── README.md
-└── .gitignore
-```
+`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
+for better security and separation of components.
 
-## Base de datos
+This means that you should configure your web server to "point" to your project's *public* folder, and
+not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
+framework are exposed.
 
-El proyecto usa MySQL y la estructura inicial queda definida en:
+**Please** read the user guide for a better explanation of how CI4 works!
 
-- [database/abm_usuarios.sql](database/abm_usuarios.sql)
+## Repository Management
 
-La base de datos por defecto es:
+We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
+We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
+FEATURE REQUESTS.
 
-- Nombre: abm_usuarios
-- Host: 127.0.0.1
-- Puerto: 3307
-- Usuario: root
-- Contraseña: vacía
+This repository is a "distribution" one, built by our release preparation script.
+Problems with it can be raised on our forum, or as issues in the main repository.
 
-Estas credenciales pueden configurarse mediante variables de entorno:
+## Server Requirements
 
-```bash
-DB_HOST=127.0.0.1
-DB_PORT=3307
-DB_NAME=abm_usuarios
-DB_USER=root
-DB_PASS=
-```
+PHP version 8.2 or higher is required, with the following extensions installed:
 
-## Requisitos
+- [intl](http://php.net/manual/en/intl.requirements.php)
+- [mbstring](http://php.net/manual/en/mbstring.installation.php)
 
-- PHP 8.x
-- MySQL / MariaDB
-- Servidor web local (XAMPP, Laragon, WAMP, Apache o PHP built-in server)
+> [!WARNING]
+> - The end of life date for PHP 7.4 was November 28, 2022.
+> - The end of life date for PHP 8.0 was November 26, 2023.
+> - The end of life date for PHP 8.1 was December 31, 2025.
+> - If you are still using below PHP 8.2, you should upgrade immediately.
+> - The end of life date for PHP 8.2 will be December 31, 2026.
 
-## Instalación y ejecución
+Additionally, make sure that the following extensions are enabled in your PHP:
 
-### 1. Crear la base de datos
-
-Importá el archivo SQL desde MySQL:
-
-```bash
-mysql -u root -p < database/abm_usuarios.sql
-```
-
-O desde phpMyAdmin / MySQL Workbench usando el archivo SQL.
-
-### 2. Levantar el proyecto
-
-Desde la raíz del proyecto:
-
-```bash
-php -S 127.0.0.1:8001 -t frontend
-```
-
-Luego abrí en el navegador:
-
-```text
-http://127.0.0.1:8001/index.php
-```
-
-### 3. Usar con XAMPP
-
-Si usás XAMPP:
-
-1. Copiá la carpeta del proyecto dentro de htdocs
-2. Iniciá Apache y MySQL
-3. Importá la base de datos
-4. Accedé a:
-
-```text
-http://localhost/Proyecto-ABM/frontend/index.php
-```
-
-## Funcionalidad principal
-
-### Gestión de usuarios
-
-- Crear un usuario con nombre, apellido, username, email y rol
-- Validar campos obligatorios
-- Validar formato de email
-- Evitar usernames o emails duplicados
-- Editar un registro existente manteniendo el mismo ID
-- Eliminar un usuario con confirmación previa
-
-### Roles
-
-La aplicación trabaja con una relación entre usuarios y roles, leyendo la lista desde la tabla roles.
-
-## Vista y frontend
-
-La interfaz se encuentra en la carpeta:
-
-- [frontend/index.php](frontend/index.php)
-- [frontend/views/users/index.php](frontend/views/users/index.php)
-- [frontend/views/users/form.php](frontend/views/users/form.php)
-- [frontend/css/styles.css](frontend/css/styles.css)
-
-Se usa HTML + PHP + CSS puro, sin frameworks de frontend, y una estética moderna oscura con estilo de panel administrativo.
-
-## Notas sobre la arquitectura
-
-El proyecto sigue un patrón en capas con intención MVC, pero con una separación más clara de responsabilidades:
-
-- Controller: orquesta el flujo de la request
-- Service: encapsula la lógica de negocio
-- Repository: maneja el acceso a la base de datos
-- Model: representa entidades del dominio
-- View: renderiza la salida HTML
-
-Esto evita mezclar lógica de acceso a datos, validación y presentación en los mismos archivos.
-
-## Estado del proyecto
-
-El proyecto se encuentra funcional y en una versión organizada para aprendizaje y extensión.
-
-Se puede continuar mejorando agregando:
-
-- paginación
-- búsquedas
-- filtros por rol
-- manejo de sesiones
-- autenticación
-- API REST
-- tests automatizados
-
-## Autor
-
-Proyecto desarrollado como ejemplo de ABM con PHP y MySQL.
+- json (enabled by default - don't turn it off)
+- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
+- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
